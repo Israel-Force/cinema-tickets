@@ -4,6 +4,9 @@ export default class InvalidPurchaseException extends Error {
     this.name = "InvalidPurchaseException";
     this.code = code;
     this.details = details;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, InvalidPurchaseException);
+    }
   }
 
   static accountIdInvalid(accountId) {
