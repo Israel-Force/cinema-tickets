@@ -1,4 +1,8 @@
 import InvalidPurchaseException from "./InvalidPurchaseException.js";
+import TicketTypeRequest from "./TicketTypeRequest.js";
+
+const TYPES = TicketTypeRequest.TYPES;
+const CATALOG = TicketTypeRequest.CATALOG;
 
 export default class BusinessRuleValidator {
   static validate(ticketSummary, totalTickets) {
@@ -20,7 +24,10 @@ export default class BusinessRuleValidator {
   }
 
   static #validateAdultSupervision(ticketSummary) {
-    if (ticketSummary.ADULT === 0 && (ticketSummary.CHILD > 0 || ticketSummary.INFANT > 0)) {
+    const requiresAdult = TYPES.some(
+      (t) => CATALOG[t].requiresAdult && (ticketSummary[t] ?? 0) > 0
+    );
+    if (requiresAdult && (ticketSummary.ADULT ?? 0) === 0) {
       throw InvalidPurchaseException.adultSupervisionRequired();
     }
   }

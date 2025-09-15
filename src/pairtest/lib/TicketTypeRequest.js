@@ -3,21 +3,37 @@
  */
 
 export default class TicketTypeRequest {
-  #type;
+  static #CATALOG = Object.freeze({
+    ADULT: { price: 25, seatsPerTicket: 1, requiresAdult: false },
+    CHILD: { price: 15, seatsPerTicket: 1, requiresAdult: true },
+    INFANT: { price: 0, seatsPerTicket: 0, requiresAdult: true },
+  });
 
+  static get TYPES() {
+    return Object.freeze(Object.keys(this.#CATALOG));
+  }
+
+  static get CATALOG() {
+    return this.#CATALOG;
+  }
+
+  #type;
   #noOfTickets;
 
   constructor(type, noOfTickets) {
-    if (!this.#Type.includes(type)) {
-      throw new TypeError(`type must be ${this.#Type.slice(0, -1).join(', ')}, or ${this.#Type.slice(-1)}`);
+    if (!TicketTypeRequest.TYPES.includes(type)) {
+      const list = TicketTypeRequest.TYPES;
+      const expected = `${list.slice(0, -1).join(", ")}, or ${list.slice(-1)}`;
+      throw new TypeError(`type must be ${expected}`);
     }
 
     if (!Number.isInteger(noOfTickets)) {
-      throw new TypeError('noOfTickets must be an integer');
+      throw new TypeError("noOfTickets must be an integer");
     }
 
     this.#type = type;
     this.#noOfTickets = noOfTickets;
+    Object.freeze(this);
   }
 
   getNoOfTickets() {
@@ -27,6 +43,4 @@ export default class TicketTypeRequest {
   getTicketType() {
     return this.#type;
   }
-
-  #Type = ['ADULT', 'CHILD', 'INFANT'];
 }

@@ -1,6 +1,6 @@
 import { expect, use } from "chai";
 import sinon from "sinon";
-import sinonChai from 'sinon-chai';
+import sinonChai from "sinon-chai";
 import TicketService from "../../src/pairtest/TicketService.js";
 import TicketTypeRequest from "../../src/pairtest/lib/TicketTypeRequest.js";
 import InvalidPurchaseException from "../../src/pairtest/lib/InvalidPurchaseException.js";
@@ -9,7 +9,7 @@ import SeatReservationService from "../../src/thirdparty/seatbooking/SeatReserva
 
 use(sinonChai);
 
-describe("TicketService - Senior Implementation (TDD)", () => {
+describe("TicketService", () => {
   let ticketService;
   let paymentService;
   let seatReservationService;
@@ -165,6 +165,28 @@ describe("TicketService - Senior Implementation (TDD)", () => {
 
       expect(paymentService.makePayment).to.have.been.calledWith(1, 65);
       expect(seatReservationService.reserveSeat).to.have.been.calledWith(1, 3);
+    });
+
+    it("should return totalAmount, totalSeats, and ticketSummary", () => {
+      const adult = new TicketTypeRequest("ADULT", 2);
+      const child = new TicketTypeRequest("CHILD", 3);
+      const infant = new TicketTypeRequest("INFANT", 1);
+
+      const result = ticketService.purchaseTickets(1, adult, child, infant);
+
+      expect(result).to.deep.equal({
+        totalAmount: 95,
+        totalSeats: 5,
+        ticketSummary: { ADULT: 2, CHILD: 3, INFANT: 1 },
+      });
+
+      expect(paymentService.makePayment).to.have.been.calledOnceWithExactly(
+        1,
+        95
+      );
+      expect(
+        seatReservationService.reserveSeat
+      ).to.have.been.calledOnceWithExactly(1, 5);
     });
   });
 

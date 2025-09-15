@@ -2,8 +2,7 @@ import { expect } from "chai";
 import BusinessRuleValidator from "../../src/pairtest/lib/BusinessRuleValidator.js";
 import InvalidPurchaseException from "../../src/pairtest/lib/InvalidPurchaseException.js";
 
-
-describe("BusinessRuleValidator - Unit Tests", () => {
+describe("BusinessRuleValidator", () => {
   describe("Minimum tickets validation", () => {
     it("should pass validation when tickets are requested", () => {
       const ticketSummary = { ADULT: 1, CHILD: 0, INFANT: 0 };
@@ -65,9 +64,8 @@ describe("BusinessRuleValidator - Unit Tests", () => {
     });
 
     it("should pass validation for adults only", () => {
-      const ticketSummary = { ADULT: 5, CHILD: 0, INFANT: 0 };
-      const totalTickets = 5;
-
+      const ticketSummary = { ADULT: 2 };
+      const totalTickets = 2;
       expect(() =>
         BusinessRuleValidator.validate(ticketSummary, totalTickets)
       ).to.not.throw();

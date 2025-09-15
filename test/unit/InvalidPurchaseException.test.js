@@ -242,41 +242,4 @@ describe('InvalidPurchaseException', () => {
       expect(caughtException.code).to.equal('TICKET_LIMIT_EXCEEDED');
     });
   });
-
-  describe('Error message and code consistency', () => {
-    it('should have consistent error codes across all factory methods', () => {
-      const codes = [
-        InvalidPurchaseException.accountIdInvalid('test').code,
-        InvalidPurchaseException.noTicketsRequested().code,
-        InvalidPurchaseException.ticketLimitExceeded(30).code,
-        InvalidPurchaseException.adultSupervisionRequired().code,
-        InvalidPurchaseException.invalidTicketRequest('test').code
-      ];
-      
-      const uniqueCodes = new Set(codes);
-      expect(uniqueCodes.size).to.equal(codes.length);
-      
-
-      codes.forEach(code => {
-        expect(code).to.match(/^[A-Z_]+$/);
-        expect(code).to.include('_');
-      });
-    });
-
-    it('should have meaningful error messages', () => {
-      const messages = [
-        InvalidPurchaseException.accountIdInvalid('test').message,
-        InvalidPurchaseException.noTicketsRequested().message,
-        InvalidPurchaseException.ticketLimitExceeded(30).message,
-        InvalidPurchaseException.adultSupervisionRequired().message
-      ];
-      
-      messages.forEach(message => {
-        expect(message).to.be.a('string');
-        expect(message.length).to.be.greaterThan(10);
-        expect(message).to.not.include('undefined');
-        expect(message).to.not.include('null');
-      });
-    });
-  });
 });

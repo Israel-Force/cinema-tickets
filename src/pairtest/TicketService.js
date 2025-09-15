@@ -1,12 +1,11 @@
-import TicketTypeRequest from './lib/TicketTypeRequest.js';
-import InvalidPurchaseException from './lib/InvalidPurchaseException.js';
-import TicketCalculator from './lib/TicketCalculator.js';
-import BusinessRuleValidator from './lib/BusinessRuleValidator.js';
+import TicketTypeRequest from "./lib/TicketTypeRequest.js";
+import InvalidPurchaseException from "./lib/InvalidPurchaseException.js";
+import TicketCalculator from "./lib/TicketCalculator.js";
+import BusinessRuleValidator from "./lib/BusinessRuleValidator.js";
 
 export default class TicketService {
   #paymentService;
   #seatReservationService;
-  #businessRuleEngine;
 
   constructor(paymentService, seatReservationService) {
     this.#paymentService = paymentService;
@@ -17,9 +16,10 @@ export default class TicketService {
     this.#validateAccountId(accountId);
     this.#validateTicketRequests(ticketTypeRequests);
 
-    const ticketSummary = TicketCalculator.createTicketSummary(ticketTypeRequests);
+    const ticketSummary =
+      TicketCalculator.createTicketSummary(ticketTypeRequests);
     const totalTickets = TicketCalculator.getTotalTickets(ticketSummary);
-    
+
     BusinessRuleValidator.validate(ticketSummary, totalTickets);
 
     const totalAmount = TicketCalculator.calculateTotalAmount(ticketSummary);
@@ -27,6 +27,8 @@ export default class TicketService {
 
     this.#processPayment(accountId, totalAmount);
     this.#reserveSeats(accountId, totalSeats);
+
+    return { totalAmount, totalSeats, ticketSummary };
   }
 
   #validateAccountId(accountId) {
@@ -43,12 +45,12 @@ export default class TicketService {
     for (const request of ticketTypeRequests) {
       if (!(request instanceof TicketTypeRequest)) {
         throw InvalidPurchaseException.invalidTicketRequest(
-          'All ticket requests must be instances of TicketTypeRequest'
+          "All ticket requests must be instances of TicketTypeRequest"
         );
       }
       if (request.getNoOfTickets() <= 0) {
         throw InvalidPurchaseException.invalidTicketRequest(
-          'Number of tickets must be greater than 0'
+          "Number of tickets must be greater than 0"
         );
       }
     }

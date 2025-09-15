@@ -1,4 +1,3 @@
-// features/step_definitions/purchase_tickets_steps.js
 import { Given, When, Then, Before, After } from '@cucumber/cucumber';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
@@ -49,7 +48,7 @@ When('I purchase tickets', function () {
 Then('the total amount paid should be {int}', function (expectedAmount) {
   expect(this.error).to.be.undefined;
   expect(this.paymentService.makePayment).to.have.been.calledOnceWithExactly(this.accountId, expectedAmount);
-  // Optional: if TicketService returns a summary
+
   if (this.result) expect(this.result.totalAmount).to.equal(expectedAmount);
 });
 
